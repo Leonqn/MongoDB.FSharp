@@ -1,4 +1,4 @@
-﻿namespace MongoDb.FSharp
+﻿namespace Mongodb.FSharp
 
 open MongoDB.Bson.Serialization.Serializers
 open MongoDB.Bson.Serialization

@@ -1,4 +1,4 @@
-﻿namespace MongoDb.FSharp
+﻿namespace Mongodb.FSharp
 
 module Registration =
     open MongoDB.Bson.Serialization.Conventions

@@ -7,12 +7,12 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a2a5c4fd-a358-4696-a5bd-30436f224829</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>MongoDb.FSharp</RootNamespace>
-    <AssemblyName>MongoDb.FSharp</AssemblyName>
+    <RootNamespace>Mongodb.FSharp</RootNamespace>
+    <AssemblyName>Mongodb.FSharp</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>MongoDb.FSharp</Name>
+    <Name>Mongodb.FSharp</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\MongoDb.FSharp.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Mongodb.FSharp.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\MongoDb.FSharp.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Mongodb.FSharp.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -54,10 +54,7 @@
     <Compile Include="Serializers.fs" />
     <Compile Include="Conventions.fs" />
     <Compile Include="Registration.fs" />
-    <None Include="Script.fsx" />
     <Content Include="packages.config" />
-    <None Include="Scripts\load-references-debug.fsx" />
-    <None Include="Scripts\load-project-debug.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MongoDB.Bson">
