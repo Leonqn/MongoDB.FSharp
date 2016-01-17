@@ -9,8 +9,8 @@ module Registration =
         pack.Add(RecordTypeConvention())
         pack.Add(UnionTypeConvention())
         pack.Add(OptionTypeConvention())
-        pack.Add(IgnoreExtraElementsConvention(true))
-        ConventionRegistry.Register("F# Type Conventions", pack, (fun _ -> true))
+        pack.Add(IgnoreExtraElementsConvention true)
+        ConventionRegistry.Register("F# Type Conventions", pack, fun _ -> true)
     
     let registerSerializers () =
         let serializationProvider = 
