@@ -28,7 +28,7 @@ type OptionTypeConvention() =
     inherit ConventionBase()
 
     interface IMemberMapConvention with
-        member __.Apply(memberMap) =
+        member __.Apply memberMap =
             let typ = memberMap.MemberType
 
             if FSharpType.IsOption typ then
