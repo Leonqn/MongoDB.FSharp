@@ -53,7 +53,6 @@
     <Compile Include="Helpers.fs" />
     <Compile Include="Serializers.fs" />
     <Compile Include="Conventions.fs" />
-    <Compile Include="Registration.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

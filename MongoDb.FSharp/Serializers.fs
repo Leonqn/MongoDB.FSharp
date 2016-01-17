@@ -1,4 +1,4 @@
-﻿namespace Mongodb.FSharp
+﻿module Mongodb.FSharp.Serializers
 
 open MongoDB.Bson.Serialization.Serializers
 open MongoDB.Bson.Serialization
@@ -15,4 +15,16 @@ type OptionTypeSerializer<'T>() =
         let value = BsonSerializer.Deserialize<'T> context.Reader
         
         if box value |> isNull then None else Some value
-        
+
+let register () =
+    let serializationProvider = 
+        { new IBsonSerializationProvider with
+                member __.GetSerializer typ = 
+                    match typ with
+                    | _ when FSharpType.IsOption typ ->
+                        typedefof<OptionTypeSerializer<_>>.MakeGenericType (typ.GetGenericArguments())
+                        |> System.Activator.CreateInstance
+                        :?> IBsonSerializer
+                    | _ ->
+                        null }
+    BsonSerializer.RegisterSerializationProvider serializationProvider

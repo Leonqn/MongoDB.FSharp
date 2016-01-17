@@ -1,4 +1,4 @@
-﻿namespace Mongodb.FSharp
+﻿module Mongodb.FSharp.Conventions
 
 open MongoDB.Bson.Serialization.Conventions
 open Microsoft.FSharp.Reflection
@@ -24,6 +24,7 @@ type RecordTypeConvention() =
 
                 fields |> Array.iter (fun x -> classMap.MapMember(x) |> ignore)
 
+
 type OptionTypeConvention() =
     inherit ConventionBase()
 
@@ -34,6 +35,7 @@ type OptionTypeConvention() =
             if FSharpType.IsOption typ then
                 memberMap.SetDefaultValue None |> ignore
                 memberMap.SetIgnoreIfNull true |> ignore
+
 
 type UnionTypeConvention() =
     inherit ConventionBase()
@@ -75,3 +77,12 @@ type UnionTypeConvention() =
 
                 if nested.Length = 0 && props.Length = 0 then
                     FSharpType.GetUnionCases typ |> get 0 |> mapCase classMap
+
+
+let register () =
+    let pack = ConventionPack()
+    pack.Add(RecordTypeConvention())
+    pack.Add(UnionTypeConvention())
+    pack.Add(OptionTypeConvention())
+    pack.Add(IgnoreExtraElementsConvention true)
+    ConventionRegistry.Register("F# Type Conventions", pack, fun _ -> true)
