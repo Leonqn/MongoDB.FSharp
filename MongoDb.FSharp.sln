@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mongodb.FSharp", "Mongodb.FSharp\Mongodb.FSharp.fsproj", "{A2A5C4FD-A358-4696-A5BD-30436F224829}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MongoDB.FSharp", "Mongodb.FSharp\MongoDB.FSharp.fsproj", "{A2A5C4FD-A358-4696-A5BD-30436F224829}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

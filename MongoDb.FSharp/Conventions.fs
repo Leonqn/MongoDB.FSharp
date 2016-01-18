@@ -1,4 +1,4 @@
-﻿module Mongodb.FSharp.Conventions
+﻿module MongoDB.FSharp.Conventions
 
 open MongoDB.Bson.Serialization.Conventions
 open Microsoft.FSharp.Reflection

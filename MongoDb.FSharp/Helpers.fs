@@ -1,4 +1,5 @@
-﻿namespace Mongodb.FSharp
+﻿[<AutoOpen>]
+module internal MongoDB.FSharp.Helpers
 
 module FSharpType = 
     open Microsoft.FSharp.Reflection

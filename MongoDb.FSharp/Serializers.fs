@@ -1,4 +1,4 @@
-﻿module Mongodb.FSharp.Serializers
+﻿module public MongoDB.FSharp.Serializers
 
 open MongoDB.Bson.Serialization.Serializers
 open MongoDB.Bson.Serialization
