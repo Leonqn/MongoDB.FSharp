@@ -54,6 +54,7 @@
     <Compile Include="Serializers.fs" />
     <Compile Include="Conventions.fs" />
     <Content Include="packages.config" />
+    <Compile Include="Extensions.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MongoDB.Bson">
