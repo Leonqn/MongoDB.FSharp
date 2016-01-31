@@ -50,11 +50,7 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="Helpers.fs" />
-    <Compile Include="Serializers.fs" />
-    <Compile Include="Conventions.fs" />
     <Content Include="packages.config" />
-    <Compile Include="Extensions.fs" />
     <Compile Include="MongoDB.FSharp.fs" />
   </ItemGroup>
   <ItemGroup>
