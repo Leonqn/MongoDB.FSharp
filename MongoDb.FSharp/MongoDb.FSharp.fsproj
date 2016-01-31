@@ -55,6 +55,7 @@
     <Compile Include="Conventions.fs" />
     <Content Include="packages.config" />
     <Compile Include="Extensions.fs" />
+    <Compile Include="MongoDB.FSharp.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MongoDB.Bson">
