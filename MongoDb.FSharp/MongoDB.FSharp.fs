@@ -24,56 +24,40 @@ module Serializers =
             let value = BsonSerializer.Deserialize<'T> context.Reader
             if box value |> isNull then None else Some value
 
+    let serializationProvider = 
+        { new IBsonSerializationProvider with
+                member __.GetSerializer typ = 
+                    match typ with
+                    | _ when isOption typ ->
+                        typedefof<OptionTypeSerializer<_>>.MakeGenericType (typ.GetGenericArguments())
+                        |> System.Activator.CreateInstance
+                        :?> IBsonSerializer
+                    | _ -> null }
+
     let register () =
-        let serializationProvider = 
-            { new IBsonSerializationProvider with
-                    member __.GetSerializer typ = 
-                        match typ with
-                        | _ when isOption typ ->
-                            typedefof<OptionTypeSerializer<_>>.MakeGenericType (typ.GetGenericArguments())
-                            |> System.Activator.CreateInstance
-                            :?> IBsonSerializer
-                        | _ ->
-                            null }
         BsonSerializer.RegisterSerializationProvider serializationProvider
 
 
 module Conventions = 
 
-    type RecordTypeConvention() =
-        inherit ConventionBase()
-
-        interface IClassMapConvention with
-            member __.Apply classMap =
+    let recordTypeConvention = 
+        { new IClassMapConvention with
+              
+              member __.Apply classMap = 
                 let typ = classMap.ClassType
-
                 if FSharpType.IsRecord typ then
                     let fields = FSharpType.GetRecordFields typ
                     let names = fields |> Array.map (fun x -> x.Name)
                     let types = fields |> Array.map (fun x -> x.PropertyType)
-                    
                     let ctor = typ.GetConstructor types
                     classMap.MapConstructor(ctor, names) |> ignore
-
                     fields |> Array.iter (fun x -> classMap.MapMember(x) |> ignore)
 
-
-    type OptionTypeConvention() =
-        inherit ConventionBase()
-
-        interface IMemberMapConvention with
-            member __.Apply memberMap =
-                let typ = memberMap.MemberType
-
-                if isOption typ then
-                    memberMap.SetDefaultValue None |> ignore
-                    memberMap.SetIgnoreIfNull true |> ignore
+              member __.Name = "F# Record Type" }
 
 
-    type UnionTypeConvention() =
-        inherit ConventionBase()
-
-        let isUnion typ = FSharpType.IsUnion typ
+    let unionTypeConvention = 
+        let isUnion = FSharpType.IsUnion
 
         let makeDelegate (meth : MethodInfo) =
             let types = meth.GetParameters() |> Array.map (fun x -> x.ParameterType)
@@ -82,36 +66,42 @@ module Conventions =
         let mapCase (classMap : BsonClassMap) (case : UnionCaseInfo) =
             let fields = case.GetFields()
             let names = fields |> Array.map (fun x -> x.Name)
-
             classMap.SetDiscriminatorIsRequired true
             classMap.SetDiscriminator case.Name
-
             let ctor = FSharpValue.PreComputeUnionConstructorInfo(case)
             let del = Delegate.CreateDelegate(makeDelegate ctor, ctor)
-
             classMap.MapCreator(del, names) |> ignore
-
             fields |> Array.iter (fun x -> classMap.MapMember(x) |> ignore)
 
-        interface IClassMapConvention with
-            member __.Apply classMap =
-                let typ = classMap.ClassType
-
-                if typ.DeclaringType <> null && isUnion typ.DeclaringType then
-                    FSharpType.GetUnionCases typ
-                    |> Array.find (fun x -> x.Name = typ.Name)
-                    |> mapCase classMap
-
-                elif isUnion typ && not typ.IsAbstract then
-                    let nested = typ.GetNestedTypes() |> Array.filter isUnion
-                    let props = typ.GetProperties() |> Array.filter (fun x -> isUnion x.PropertyType)
-
-                    if nested.Length = 0 && props.Length = 0 then
-                        FSharpType.GetUnionCases typ |> Seq.item 0 |> mapCase classMap
-        
+        { new IClassMapConvention with
+              
+              member __.Apply classMap = 
+                  let typ = classMap.ClassType
+                  if typ.DeclaringType <> null && isUnion typ.DeclaringType then
+                      FSharpType.GetUnionCases typ
+                      |> Array.find (fun x -> x.Name = typ.Name)
+                      |> mapCase classMap
+                  elif isUnion typ && not typ.IsAbstract then
+                      let nested = typ.GetNestedTypes() |> Array.filter isUnion
+                      let props = typ.GetProperties() |> Array.filter (fun x -> isUnion x.PropertyType)
+                      if nested.Length = 0 && props.Length = 0 then
+                          FSharpType.GetUnionCases typ |> Seq.item 0 |> mapCase classMap
+              
+              member __.Name = "F# Union Type" }
+    
+    let optionTypeConvention = 
+        { new IMemberMapConvention with
+              
+              member __.Apply memberMap = 
+                  if isOption memberMap.MemberType then
+                      memberMap.SetDefaultValue None |> ignore
+                      memberMap.SetIgnoreIfNull true |> ignore
+              
+              member __.Name = "F# Option Type" }
+   
     let register () =
         let pack = ConventionPack()
-        pack.Add(RecordTypeConvention())
-        pack.Add(UnionTypeConvention())
-        pack.Add(OptionTypeConvention())
+        pack.Add recordTypeConvention 
+        pack.Add optionTypeConvention
+        pack.Add unionTypeConvention
         ConventionRegistry.Register("F# Type Conventions", pack, fun _ -> true)
