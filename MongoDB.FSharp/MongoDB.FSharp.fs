@@ -77,7 +77,7 @@ module Conventions =
               
             member __.Apply classMap = 
                 let typ = classMap.ClassType
-                if not <| isNull typ.DeclaringType && isUnion typ.DeclaringType then
+                if typ.DeclaringType <> null && isUnion typ.DeclaringType then
                     FSharpType.GetUnionCases typ
                     |> Array.find (fun x -> x.Name = typ.Name)
                     |> mapCase classMap
